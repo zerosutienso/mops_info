@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣證交所重大訊息查看器</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .announcement-card {
+            transition: transform 0.2s;
+            border-left: 4px solid #007bff;
+        }
+        .announcement-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .company-badge {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+        }
+        .date-badge {
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+        }
+        .search-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+        }
+        .stats-card {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line me-2"></i>
+                台灣證交所重大訊息查看器
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/stats">
+                    <i class="fas fa-chart-bar me-1"></i>統計分析
+                </a>
+                <a class="nav-link" href="/api/announcements">
+                    <i class="fas fa-code me-1"></i>API
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="search-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="text-center mb-4">
+                        <i class="fas fa-search me-2"></i>查詢重大訊息
+                    </h2>
+                    <form method="get" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">公司代號</label>
+                            <select name="company" class="form-select">
+                                <option value="">所有公司</option>
+                                {% for company in companies %}
+                                <option value="{{ company.code }}">
+                                    {{ company.code }} - {{ company.name }} ({{ company.count }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">查詢日期</label>
+                            <select name="date" class="form-select">
+                                <option value="">所有日期</option>
+                                {% for date in dates %}
+                                <option value="{{ date }}">
+                                    {{ date }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">關鍵字搜尋</label>
+                            <input type="text" name="search" class="form-control"
+                                   placeholder="搜尋標題內容..."
+                                   value="">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-light w-100">
+                                <i class="fas fa-search me-1"></i>搜尋
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <!-- 統計資訊 -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <h3 class="text-primary">{{ total_count }}</h3>
+                                <p class="text-muted mb-0">總公告數量</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h3 class="text-success">{{ companies.len() }}</h3>
+                                <p class="text-muted mb-0">公司數量</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h3 class="text-info">{{ dates.len() }}</h3>
+                                <p class="text-muted mb-0">查詢日期數</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 公告列表 -->
+        <div class="row">
+            <div class="col-12">
+                <h4 class="mb-3">
+                    <i class="fas fa-list me-2"></i>重大訊息列表
+                    <small class="text-muted">(共 {{ total_count }} 筆)</small>
+                </h4>
+                
+                {% if announcements.is_empty() %}
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-2"></i>
+                    沒有找到符合條件的重大訊息
+                </div>
+                {% else %}
+                
+                {% for announcement in announcements %}
+                <div class="card announcement-card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5 class="card-title">
+                                    <a href="/detail/{{ announcement.id.as_ref().unwrap() }}" 
+                                       class="text-decoration-none">
+                                        {{ announcement.title }}
+                                    </a>
+                                </h5>
+                                <div class="mb-2">
+                                    <span class="badge company-badge me-2">
+                                        <i class="fas fa-building me-1"></i>
+                                        {{ announcement.company_code }} - {{ announcement.company_name }}
+                                    </span>
+                                    <span class="badge date-badge me-2">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        {{ announcement.date }} {{ announcement.time }}
+                                    </span>
+                                    <span class="badge bg-secondary">
+                                        <i class="fas fa-search me-1"></i>
+                                        查詢日期: {{ announcement.query_date.as_ref().unwrap_or(&"N/A".to_string()) }}
+                                    </span>
+                                </div>
+                                {% if let Some(detail) = &announcement.detail_content %}
+                                <p class="card-text text-muted">
+                                    {{ detail.chars().take(150).collect::<String>() }}
+                                    {% if detail.len() > 150 %}...{% endif %}
+                                </p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="mb-2">
+                                    {% if let Some(created_at) = &announcement.created_at %}
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>
+                                        建立時間: {{ created_at.format("%Y-%m-%d %H:%M") }}
+                                    </small>
+                                    {% endif %}
+                                </div>
+                                <a href="/detail/{{ announcement.id.as_ref().unwrap() }}" 
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-eye me-1"></i>查看詳細
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 分頁 -->
+        {% if total_count > 20 %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <nav aria-label="分頁導航">
+                    <ul class="pagination justify-content-center">
+                        {% let current_page = query_params.page.unwrap_or(1) %}
+                        {% let total_pages = (total_count as f64 / 20.0).ceil() as u64 %}
+                        
+                        {% if current_page > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ current_page - 1 }}">上一頁</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for page in 1..=total_pages.min(10) %}
+                        <li class="page-item {% if page == current_page %}active{% endif %}">
+                            <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                        </li>
+                        {% endfor %}
+                        
+                        {% if current_page < total_pages %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ current_page + 1 }}">下一頁</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer class="bg-light mt-5 py-4">
+        <div class="container text-center">
+            <p class="text-muted mb-0">
+                <i class="fas fa-chart-line me-2"></i>
+                台灣證交所重大訊息查看器 - 使用 Rust + MongoDB 建立
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

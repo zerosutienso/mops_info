@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>間距修復測試</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        
+        /* 修復前的樣式 */
+        .old-style {
+            border: 2px solid #dc3545;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            background-color: #f8f9fa;
+        }
+        .old-company-datetime-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+        .old-company-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .old-datetime-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        /* 修復後的樣式 */
+        .new-style {
+            border: 2px solid #28a745;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            background-color: #f8f9fa;
+        }
+        .new-company-datetime-row {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+        .new-company-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .new-datetime-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+            white-space: nowrap;
+            margin-left: 3ch; /* 3 個字符寬度的間距 */
+        }
+        
+        .space-indicator {
+            background-color: #ffc107;
+            color: #000;
+            padding: 0.1rem 0.3rem;
+            font-size: 0.8rem;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="text-center mb-4">🔧 間距修復測試頁面</h1>
+        
+        <div class="alert alert-info">
+            <h5><i class="fas fa-info-circle me-2"></i>測試說明</h5>
+            <p>這個頁面展示了公司名稱與 datetime 之間間距的修復效果：</p>
+            <ul>
+                <li><strong>紅框</strong>：修復前 - 使用 justify-content-between（間距不固定）</li>
+                <li><strong>綠框</strong>：修復後 - 使用 margin-left: 3ch（固定 3 個空格間距）</li>
+            </ul>
+        </div>
+
+        <!-- 修復前的樣式 -->
+        <div class="old-style">
+            <h4 class="text-danger mb-3">❌ 修復前 (justify-content-between)</h4>
+            
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="old-company-datetime-row mb-2">
+                        <div class="old-company-header">
+                            <i class="fas fa-building me-2 text-primary"></i>
+                            2330 - 台積電
+                        </div>
+                        <div class="old-datetime-info">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                114/08/14 16:30:15
+                            </small>
+                        </div>
+                    </div>
+                    <div class="announcement-title">董事會決議股利分派案</div>
+                </div>
+            </div>
+            
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="old-company-datetime-row mb-2">
+                        <div class="old-company-header">
+                            <i class="fas fa-building me-2 text-primary"></i>
+                            2454 - 聯發科技股份有限公司
+                        </div>
+                        <div class="old-datetime-info">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                114/08/14 15:45:30
+                            </small>
+                        </div>
+                    </div>
+                    <div class="announcement-title">法人說明會重要資訊</div>
+                </div>
+            </div>
+            
+            <div class="alert alert-warning">
+                <strong>問題</strong>：公司名稱長短不同時，間距會變化，不一致！
+            </div>
+        </div>
+
+        <!-- 修復後的樣式 -->
+        <div class="new-style">
+            <h4 class="text-success mb-3">✅ 修復後 (margin-left: 3ch)</h4>
+            
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="new-company-datetime-row mb-2">
+                        <div class="new-company-header">
+                            <i class="fas fa-building me-2 text-primary"></i>
+                            2330 - 台積電
+                        </div>
+                        <div class="new-datetime-info">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                114/08/14 16:30:15
+                            </small>
+                        </div>
+                    </div>
+                    <div class="announcement-title">董事會決議股利分派案</div>
+                </div>
+            </div>
+            
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="new-company-datetime-row mb-2">
+                        <div class="new-company-header">
+                            <i class="fas fa-building me-2 text-primary"></i>
+                            2454 - 聯發科技股份有限公司
+                        </div>
+                        <div class="new-datetime-info">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                114/08/14 15:45:30
+                            </small>
+                        </div>
+                    </div>
+                    <div class="announcement-title">法人說明會重要資訊</div>
+                </div>
+            </div>
+            
+            <div class="alert alert-success">
+                <strong>修復</strong>：無論公司名稱多長，時間都固定在 3 個空格後！
+            </div>
+        </div>
+
+        <!-- 間距示意圖 -->
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-ruler me-2"></i>間距示意圖</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>修復後的間距：</strong><br>
+                    <code>公司名稱<span class="space-indicator">3空格</span>時間</code>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>實際效果：</strong><br>
+                    <div style="font-family: monospace; font-size: 1.1rem; line-height: 1.8;">
+                        🏢 2330 - 台積電<span style="background-color: #ffc107; padding: 0 0.2rem;">   </span>🕐 114/08/14 16:30:15<br>
+                        🏢 2454 - 聯發科<span style="background-color: #ffc107; padding: 0 0.2rem;">   </span>🕐 114/08/14 15:45:30<br>
+                        🏢 2317 - 鴻海<span style="background-color: #ffc107; padding: 0 0.2rem;">   </span>🕐 114/08/14 14:20:15
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    <strong>技術說明：</strong>使用 <code>margin-left: 3ch</code> 確保固定的 3 個字符寬度間距
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="http://127.0.0.1:3000" class="btn btn-primary">
+                <i class="fas fa-external-link-alt me-2"></i>
+                查看實際 Web 介面
+            </a>
+        </div>
+    </div>
+</body>
+</html>
