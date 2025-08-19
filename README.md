@@ -1,163 +1,192 @@
-# 台灣證交所重大訊息查詢 CLI
+# 🏢 證交所重大訊息擷取系統
 
-這是一個用 Rust 寫的命令列工具，用來查詢台灣證券交易所的重大訊息公告。
+[![Rust](https://img.shields.io/badge/rust-1.70+-orange.svg)](https://www.rust-lang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![MongoDB](https://img.shields.io/badge/MongoDB-4.4+-green.svg)](https://www.mongodb.com/)
 
-## 功能特色
+一個功能完整的台灣證券交易所重大訊息擷取與分析系統，使用 Rust 開發，提供高效能的資料擷取、儲存和查詢功能。
 
-- 🔍 查詢指定日期的重大訊息（預設為當日）
-- 🏢 可依公司代號篩選
-- 📊 支援多種輸出格式（表格、JSON、HTML、TXT）
-- 📋 JSON 格式包含完整詳細資料
-- 💾 自動儲存檔案功能
-- 🗄️ MongoDB 資料庫整合
-- 📈 支援歷史資料分析
-- ⚡ 使用 Rust 開發，執行快速
+## ✨ 主要功能
 
-## 安裝
+### 📊 資料擷取
+- 🔍 **智能解析**：自動擷取重大訊息詳細內容
+- 📅 **事實發生日**：從隱藏欄位擷取標準化日期格式
+- 📋 **條款代號**：自動識別並對應 51 個條款代號說明
+- 💾 **多格式輸出**：支援 JSON、TXT、HTML 格式
+- 🔄 **自動備份**：每次查詢自動儲存原始 HTML
 
-確保你已經安裝了 Rust 開發環境，然後執行：
+### 🗄️ 資料庫整合
+- 📈 **MongoDB 支援**：高效能資料儲存與查詢
+- 🚫 **防重複機制**：智能去重，支援 upsert 和 skip 模式
+- 🔍 **索引優化**：針對常用查詢建立索引
+- 📊 **統計分析**：內建資料統計和分析功能
 
+### 🌐 Web 介面
+- 🖥️ **現代化 UI**：響應式設計，支援桌面和行動裝置
+- 🔍 **即時搜尋**：公司代號、名稱、標題即時過濾
+- 📅 **日期範圍查詢**：靈活的日期區間選擇
+- 📤 **CSV 匯出**：一鍵匯出查詢結果
+- 🏷️ **條款標籤**：視覺化顯示條款代號和說明
+
+## 🚀 快速開始
+
+### 1. 環境需求
+- **Rust**: 1.70 或更新版本
+- **MongoDB**: 4.4 或更新版本（可選）
+- **作業系統**: Windows、macOS、Linux
+
+### 2. 安裝與建置
 ```bash
+# 克隆專案
+git clone <repository-url>
+cd 證交所重大訊息_augment
+
+# 建置專案
 cargo build --release
 ```
 
-## 使用方法
-
-### 基本用法
-
-查詢今日的重大訊息：
+### 3. 基本使用
 ```bash
-cargo run
+# 查詢指定日期的重大訊息
+./target/release/twse-announcements.exe --date 2025-08-18
+
+# 查詢並儲存到 MongoDB
+./target/release/twse-announcements.exe --date 2025-08-18 --save-mongodb
+
+# 啟動 Web 查看器
+./target/release/simple_web_server.exe
 ```
 
-### 指定日期查詢
+## 📖 詳細文件
 
-查詢特定日期的重大訊息：
+### 📋 功能說明
+- [條款代號對照表功能](./條款代號對照表功能說明.md)
+- [事實發生日擷取功能](./事實發生日擷取功能說明.md)
+- [自動儲存原始HTML功能](./自動儲存原始HTML功能說明.md)
+- [日期範圍查詢功能](./日期範圍查詢功能說明.md)
+
+### 🛠️ 設定與安裝
+- [MongoDB 快速安裝指南](./MongoDB快速安裝指南.md)
+- [MongoDB 設定說明](./MongoDB設定說明.md)
+- [無 MongoDB 使用指南](./無MongoDB使用指南.md)
+
+### 💻 使用指南
+- [Web 查看器使用說明](./Web查看器使用說明.md)
+- [MongoDB 使用範例](./MongoDB使用範例.md)
+- [完整功能展示](./完整功能展示.md)
+
+### 🔧 開發文件
+- [MongoDB 整合總結](./MongoDB整合總結.md)
+- [Web 查看器開發總結](./Web查看器開發總結.md)
+- [最終專案總結](./最終專案總結.md)
+
+## 🎯 使用範例
+
+### 命令列工具
 ```bash
-cargo run -- --date 2025-08-15
+# 基本查詢
+./target/release/twse-announcements.exe --date 2025-08-18
+
+# 輸出 JSON 格式
+./target/release/twse-announcements.exe --date 2025-08-18 --format json
+
+# 儲存到 MongoDB
+./target/release/twse-announcements.exe --date 2025-08-18 --save-mongodb
+
+# 日期範圍查詢
+./target/release/twse-announcements.exe --start-date 2025-08-15 --end-date 2025-08-18
 ```
 
-### 篩選特定公司
-
-查詢特定公司的重大訊息：
+### Web 介面
 ```bash
-cargo run -- --company 2330
+# 啟動 Web 服務器
+./target/release/simple_web_server.exe
+
+# 開啟瀏覽器訪問
+http://127.0.0.1:3000
 ```
 
-### 不同輸出格式
+## 📊 資料格式
 
-表格格式（預設）：
-```bash
-cargo run -- --format table
-```
-
-JSON 格式：
-```bash
-cargo run -- --format json
-```
-
-HTML 格式（原始回應）：
-```bash
-cargo run -- --format html
-```
-
-TXT 格式（純文字檔案）：
-```bash
-cargo run -- --format txt
-```
-
-### 儲存原始 HTML
-
-```bash
-cargo run -- --save-html
-```
-
-### MongoDB 資料庫整合
-
-儲存到 MongoDB 資料庫：
-```bash
-# 基本用法
-cargo run -- --save-mongodb
-
-# 指定日期和公司
-cargo run -- --date 2025-08-15 --company 2330 --save-mongodb
-
-# 自訂 MongoDB 設定
-cargo run -- --save-mongodb --mongodb-uri "mongodb://localhost:27017" --mongodb-database "twse_db"
-```
-
-### 完整參數範例
-
-```bash
-# 完整功能展示
-cargo run -- --date 2025-08-15 --company 2330 --format json --save-html --save-mongodb --output my_data
-```
-
-## 命令列參數
-
-### 基本參數
-- `-d, --date <DATE>`: 查詢日期，格式為 YYYY-MM-DD（預設為今日）
-- `-c, --company <CODE>`: 公司代號篩選
-- `-f, --format <FORMAT>`: 輸出格式，可選 `table`、`json`、`html`、`txt`（預設為 table）
-- `--save-html`: 儲存原始 HTML 回應到檔案
-- `-o, --output <PREFIX>`: 輸出檔案前綴名稱（預設為 twse_announcements）
-
-### MongoDB 參數
-- `--save-mongodb`: 儲存資料到 MongoDB
-- `--mongodb-uri <URI>`: MongoDB 連接字串（預設：mongodb://localhost:27017）
-- `--mongodb-database <DB>`: 資料庫名稱（預設：twse_db）
-- `--mongodb-collection <COLLECTION>`: 集合名稱（預設：announcements）
-
-## 輸出範例
-
-### 表格格式
-```
-查詢日期: 2025-08-17
-代號       公司名稱                 日期         時間       標題
---------------------------------------------------------------------------------
-2330       台積電                   08/17        14:30      董事會決議股利分派
-2317       鴻海                     08/17        16:45      重大訊息公告
-```
-
-### JSON 格式（包含詳細資料）
+### JSON 輸出範例
 ```json
-[
-  {
-    "company_code": "2330",
-    "company_name": "台積電",
-    "title": "本公司代子公司 TSMC Global Ltd. 公告取得固定收益證券",
-    "date": "114/08/15",
-    "time": "17:40:31",
-    "detail_content": "1.證券名稱:\n公司債。\n2.交易日期:114/8/12~114/8/15\n3.董事會通過日期: 不適用\n4.其他核決日期:\n核決層級:不適用。\n民國114年08月15日\n5.交易數量、每單位價格及交易總金額:\n61747YEC5：400,000 單位；每單位US$97.43；總金額US$39.0 佰萬元。\n06051GJS9：300,000 單位；每單位US$97.60；總金額US$29.3 佰萬元。\n6.處分利益（或損失）（取得有價證券者不適用）:\n不適用\n7.與交易標的公司之關係:\n無。\n8.迄目前為止，累積持有本交易證券（含本次交易）之數量、金額、持股\n比例及權利受限情形（如質押情形）:\n61747YEC5：3,590,000 單位；US$349.0 佰萬元；持股比例：不適用；受限情形：無。\n06051GJS9：3,203,950 單位；US$312.0 佰萬元；持股比例：不適用；受限情形：無。\n9.迄目前為止，依「公開發行公司取得或處分資產處理準則」第三條所列之有價證券投\n資（含本次交易）占公司最近期財務報表中總資產及歸屬於母公司業主之權益之比例\n暨最近期財務報表中營運資金數額:\n5.80%；7.65%；NT$436,219 佰萬元。\n10.取得或處分之具體目的:\n固定收益投資。\n11.本次交易表示異議董事之意見:\n不適用\n12.本次交易為關係人交易:\n否\n13.交易相對人及其與公司之關係:\n不適用\n14.監察人承認或審計委員會同意日期:\n不適用\n15.前已就同一件事件發布重大訊息日期: 不適用\n16.其他敘明事項:\n無。"
-  }
-]
+{
+  "company_code": "2327",
+  "company_name": "國巨",
+  "title": "公告本公司股票面額變更",
+  "date": "114/08/18",
+  "time": "16:30:15",
+  "fact_occurrence_date": "2025-07-08",
+  "clause_code": "51",
+  "detail_content": "詳細內容...",
+  "created_at": "2025-08-18T14:27:53.394Z"
+}
 ```
 
-### 無資料時
+### MongoDB 文件結構
+```javascript
+{
+  "_id": ObjectId("..."),
+  "company_code": "2327",
+  "company_name": "國巨",
+  "title": "公告本公司股票面額變更",
+  "fact_occurrence_date": "2025-07-08",
+  "clause_code": "51",
+  "created_at": ISODate("2025-08-18T14:27:53.394Z"),
+  "query_date": "2025-08-18"
+}
 ```
-查詢日期: 2025-08-17
-今日無重大訊息公告
+
+## 🏗️ 專案結構
+
+```
+證交所重大訊息_augment/
+├── src/
+│   ├── main.rs              # 主程式
+│   ├── simple_web.rs        # Web 服務器
+│   └── web_viewer.rs        # Web 查看器
+├── templates/               # HTML 模板
+├── docs/                    # 文件目錄
+├── examples/               # 使用範例
+└── scripts/                # 輔助腳本
 ```
 
-### 檔案輸出
-程式會自動產生以下檔案：
-- `twse_announcements_YYYYMMDD.html` - 原始 HTML 回應（使用 --save-html）
-- `twse_announcements_YYYYMMDD.json` - JSON 格式資料
-- `twse_announcements_YYYYMMDD.txt` - 純文字格式資料
+## 🔧 設定選項
 
-## 技術說明
+### 命令列參數
+- `--date`: 查詢日期 (YYYY-MM-DD)
+- `--start-date`: 起始日期
+- `--end-date`: 結束日期
+- `--format`: 輸出格式 (json/text)
+- `--save-mongodb`: 儲存到 MongoDB
+- `--duplicate-mode`: 重複處理模式 (upsert/skip)
 
-- 使用 `reqwest` 進行 HTTP 請求
-- 使用 `scraper` 解析 HTML 回應
-- 使用 `clap` 處理命令列參數
-- 使用 `chrono` 處理日期時間
+### 環境變數
+- `MONGODB_URI`: MongoDB 連線字串
+- `DATABASE_NAME`: 資料庫名稱
+- `COLLECTION_NAME`: 集合名稱
 
-## 注意事項
+## 🤝 貢獻指南
 
-- 本工具僅供學習和個人使用
-- 請遵守證交所網站的使用條款
-- 建議適度使用，避免對伺服器造成過大負擔
+歡迎提交 Issue 和 Pull Request！
 
-## 授權
+1. Fork 專案
+2. 創建功能分支
+3. 提交變更
+4. 推送到分支
+5. 創建 Pull Request
 
-MIT License
+## 📄 授權
+
+本專案採用 MIT 授權條款 - 詳見 [LICENSE](LICENSE) 檔案
+
+## 🙏 致謝
+
+- 台灣證券交易所提供公開資料
+- Rust 社群的優秀套件
+- MongoDB 團隊的資料庫技術
+
+---
+
+**📞 聯絡資訊**
+如有問題或建議，歡迎開啟 Issue 或聯絡專案維護者。
